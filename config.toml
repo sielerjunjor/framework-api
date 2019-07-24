@@ -1,2 +1,2 @@
-server="localhost"
+server="frameworks-mongo-db-servers-vm-0"
 database="frameworks"
