@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	_ "encoding/json"
 	"github.com/sielerjunjor/framework-api/models"
-	"google.golang.org/appengine"
+
+	//	"google.golang.org/appengine"
 
 
 	"github.com/gorilla/mux"
@@ -104,8 +105,6 @@ func init() {
 }
 
 func main() {
-
-	appengine.Main()
 
 	fmt.Println("Starting Rest Endpoint")
 	fmt.Println("Endpoint at localhost:3000/frameworks")
