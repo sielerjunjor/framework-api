@@ -3,13 +3,14 @@ package main
 import (
 	"encoding/json"
 	_ "encoding/json"
-	"github.com/ledex/framework-api/models"
+	
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
 
 	"fmt"
+	. "github.com/ledex/framework-api/models"
 	. "github.com/ledex/framework-api/config"
 	. "github.com/ledex/framework-api/dao"
 
