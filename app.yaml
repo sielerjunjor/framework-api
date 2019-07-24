@@ -3,4 +3,4 @@ api_version: go1
 
 handler:
 -url: /.*
--scrip: go_app
+ script: go_app
