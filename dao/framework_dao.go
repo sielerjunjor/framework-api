@@ -1,9 +1,9 @@
 package dao
 
 import (
+	"github.com/sielerjunjor/framework-api/models"
 	"log"
 
-	"github.com/ledex/framework-api/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
