@@ -3,7 +3,7 @@ package dao
 import (
 	"log"
 
-	"framework-api/models"
+	"github.com/ledex/framework-api/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
