@@ -1,6 +1,6 @@
 runtime: go
 api_version: go1
 
-handler:
--url: /.*
--scrip: go_app
+handlers:
+- url: /.*
+  script: app
