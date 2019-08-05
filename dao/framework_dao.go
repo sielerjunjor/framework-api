@@ -1,8 +1,9 @@
 package dao
 
 import (
-	"github.com/sielerjunjor/framework-api/models"
 	"log"
+
+	"github.com/sielerjunjor/framework-api/models"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -11,6 +12,8 @@ import (
 type FrameworksDAO struct {
 	Server   string
 	Database string
+	Password string
+	Username string
 }
 
 var db *mgo.Database
@@ -21,13 +24,12 @@ const (
 
 // Establish a connection to database
 func (m *FrameworksDAO) Connect() {
-	session, err := mgo.Dial(m.Server)
+	session, err := mgo.Dial("gcloud:Test1234@framework-zitzm.gcp.mongodb.net/test?retryWrites=true&w=majority")
 	if err != nil {
 		log.Fatal(err)
 	}
 	db = session.DB(m.Database)
 }
-
 
 // Find list of frameworks
 func (m *FrameworksDAO) FindAll() ([]models.Framework, error) {
@@ -56,7 +58,7 @@ func (m *FrameworksDAO) Insert(framework models.Framework) error {
 //}
 
 //Delete
-func (m *FrameworksDAO) Delete(id string)  error {
+func (m *FrameworksDAO) Delete(id string) error {
 	var framework models.Framework
 	xrr := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).One(&framework)
 	err := db.C(COLLECTION).Remove(xrr)

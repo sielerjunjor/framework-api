@@ -1,2 +1,4 @@
-server="frameworks-mongo-db-servers-vm-0"
+server="framework-zitzm.gcp.mongodb.net/test?retryWrites=true&w=majority"
 database="frameworks"
+user="gcloud"
+password="Test1234"
