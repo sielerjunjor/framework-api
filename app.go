@@ -25,12 +25,7 @@ var dao = FrameworksDAO{}
 //GET list of Frameworks
 func AllFrameworksEndpoint(w http.ResponseWriter, r *http.Request) {
 	//frameworks, err := dao.FindAll()
-	frameworks := nil
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	respondWithJson(w, http.StatusOK, frameworks)
+	w.Write([]byte("Es klappt!"))
 }
 
 // GET a Framework by its ID
