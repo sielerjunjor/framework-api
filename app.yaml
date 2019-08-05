@@ -6,4 +6,4 @@ handlers:
   script: app
 network:
   forwarded_ports:
-    - 8080:3000
+    - 3000
