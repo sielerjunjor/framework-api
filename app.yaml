@@ -4,3 +4,6 @@ api_version: go1
 handlers:
 - url: /.*
   script: app
+network:
+  forwarded_ports:
+    - 8080:3000
