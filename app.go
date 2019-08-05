@@ -3,16 +3,18 @@ package main
 import (
 	"encoding/json"
 	_ "encoding/json"
+
 	"github.com/sielerjunjor/framework-api/models"
 	"google.golang.org/appengine"
 
-
-	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2/bson"
+
 	"fmt"
+
 	. "github.com/sielerjunjor/framework-api/config"
 	. "github.com/sielerjunjor/framework-api/dao"
 )
@@ -20,9 +22,8 @@ import (
 var config = Config{}
 var dao = FrameworksDAO{}
 
-
 //GET list of Frameworks
-func AllFrameworksEndpoint(w http.ResponseWriter, r *http.Request){
+func AllFrameworksEndpoint(w http.ResponseWriter, r *http.Request) {
 	frameworks, err := dao.FindAll()
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -30,8 +31,9 @@ func AllFrameworksEndpoint(w http.ResponseWriter, r *http.Request){
 	}
 	respondWithJson(w, http.StatusOK, frameworks)
 }
+
 // GET a Framework by its ID
-func FindFrameworkById(w http.ResponseWriter, r *http.Request){
+func FindFrameworkById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	framework, err := dao.FindById(params["id"])
 	if err != nil {
@@ -66,7 +68,7 @@ func UpdateFrameworkEndPoint(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-	if err := dao.Update(params["id"] ,framework); err != nil {
+	if err := dao.Update(params["id"], framework); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -105,8 +107,6 @@ func init() {
 
 func main() {
 
-	appengine.Main()
-
 	fmt.Println("Starting Rest Endpoint")
 	fmt.Println("Endpoint at localhost:3000/frameworks")
 
@@ -120,5 +120,5 @@ func main() {
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatal(err)
 	}
-
+	appengine.Main()
 }
