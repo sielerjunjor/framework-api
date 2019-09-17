@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 	_ "encoding/json"
 	"github.com/sielerjunjor/framework-api/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	//	"google.golang.org/appengine"
 
-
 	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
 
@@ -50,7 +49,8 @@ func CreateFrameworkEndPoint(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-	framework.ID = bson.NewObjectId()
+	id := primitive.NewObjectID()
+	framework.ID =&id
 	if err := dao.Insert(framework); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -67,7 +67,7 @@ func UpdateFrameworkEndPoint(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-	if err := dao.Update(params["id"] ,framework); err != nil {
+	err := dao.Update(params["id"] ,framework);if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -77,7 +77,7 @@ func UpdateFrameworkEndPoint(w http.ResponseWriter, r *http.Request) {
 // DELETE an existing movie
 func DeleteFrameworkEndPoint(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	if err := dao.Delete(params["id"]); err != nil {
+	_, err := dao.Delete(params["id"]);if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -101,6 +101,7 @@ func init() {
 
 	dao.Server = config.Server
 	dao.Database = config.Database
+	dao.Collection = config.Collection
 	dao.Connect()
 }
 

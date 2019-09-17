@@ -1,19 +1,25 @@
 package dao
 
 import (
+	"context"
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/sielerjunjor/framework-api/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"time"
 
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type FrameworksDAO struct {
 	Server   string
 	Database string
+	Collection string
 }
 
-var db *mgo.Database
+var collection *mongo.Collection
 
 const (
 	COLLECTION = "frameworks"
@@ -21,50 +27,62 @@ const (
 
 // Establish a connection to database
 func (m *FrameworksDAO) Connect() {
-	session, err := mgo.Dial(m.Server)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(m.Server))
 	if err != nil {
+		log.Print("first")
 		log.Fatal(err)
 	}
-	db = session.DB(m.Database)
+
+	collection = client.Database(m.Database).Collection(m.Collection)
 }
 
 
 // Find list of frameworks
 func (m *FrameworksDAO) FindAll() ([]models.Framework, error) {
 	var frameworks []models.Framework
-	err := db.C(COLLECTION).Find(bson.M{}).All(&frameworks)
+	cur, err := collection.Find(nil, bson.M{})
+	err = cur.All(nil, &frameworks)
 	return frameworks, err
 }
 
 // Find a Framework by its id
 func (m *FrameworksDAO) FindById(id string) (models.Framework, error) {
 	var framework models.Framework
-	err := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).One(&framework)
+	oid, _ := primitive.ObjectIDFromHex(id)
+	err := collection.FindOne(nil, bson.M{"_id":oid }).Decode(&framework)
 	return framework, err
 }
 
-// Insert a movie into database
+// Insert a framework into database
 func (m *FrameworksDAO) Insert(framework models.Framework) error {
-	err := db.C(COLLECTION).Insert(&framework)
+	_, err := collection.InsertOne(nil, &framework)
 	return err
 }
-
-// Delete an existing movie
-//func (m *FrameworksDAO) Delete(framework models.Framework) error {
-//	err := db.C(COLLECTION).Remove(&framework)
-//	return err
-//}
 
 //Delete
-func (m *FrameworksDAO) Delete(id string)  error {
-	var framework models.Framework
-	xrr := db.C(COLLECTION).FindId(bson.ObjectIdHex(id)).One(&framework)
-	err := db.C(COLLECTION).Remove(xrr)
-	return err
+func (m *FrameworksDAO) Delete(id string)  (bool, error) {
+	oid, _ := primitive.ObjectIDFromHex(id)
+	res, err := collection.DeleteOne(nil, bson.M{"_id": oid})
+	return res.DeletedCount == 1, err
 }
 
-// Update an existing movie
-func (m *FrameworksDAO) Update(id string, framework models.Framework) error {
-	err := db.C(COLLECTION).UpdateId(bson.ObjectIdHex(id), &framework)
-	return err
+// Update an existing framework
+func (m *FrameworksDAO) Update(id string, framework models.Framework) (error) {
+	fmt.Print(id)
+
+	oid, _ := primitive.ObjectIDFromHex(id)
+	framework.ID = &oid
+	fmt.Print(framework)
+
+	filter := bson.M{"_id": oid}
+	fmt.Println("filter: %d\n", filter)
+	update := bson.M{"$set": &framework}
+
+	res := collection.FindOneAndUpdate(nil, filter, update)
+
+
+
+	return res.Err()
+	//return err
 }
