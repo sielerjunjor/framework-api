@@ -24,6 +24,7 @@ const (
 
 // Establish a connection to database
 func (m *FrameworksDAO) Connect() {
+	log.Println("Connecting to ", m.Server)
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(m.Server))
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +36,7 @@ func (m *FrameworksDAO) Connect() {
 		log.Fatal(err)
 	}
 
-	log.Print("Connected to MongoDB!")
+	log.Println("Connected to MongoDB!")
 
 	collection = client.Database(m.Database).Collection(m.Collection)
 }

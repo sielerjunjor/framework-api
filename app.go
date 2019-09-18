@@ -12,7 +12,6 @@ import (
 	"log"
 	"net/http"
 
-	"fmt"
 	. "github.com/sielerjunjor/framework-api/config"
 	. "github.com/sielerjunjor/framework-api/dao"
 )
@@ -35,7 +34,7 @@ func FindFrameworkById(w http.ResponseWriter, r *http.Request){
 	params := mux.Vars(r)
 	framework, err := dao.FindById(params["id"])
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid Movie ID")
+		respondWithError(w, http.StatusBadRequest, "Invalid Framework ID")
 		return
 	}
 	respondWithJson(w, http.StatusOK, framework)
@@ -107,8 +106,8 @@ func init() {
 
 func main() {
 
-	fmt.Println("Starting Rest Endpoint")
-	fmt.Println("Endpoint at localhost:3000/frameworks")
+	log.Println("Starting Rest Endpoint")
+	log.Println("Endpoint at localhost:3000/frameworks")
 
 	r := mux.NewRouter()
 	r.HandleFunc("/frameworks", AllFrameworksEndpoint).Methods("GET")
