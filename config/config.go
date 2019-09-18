@@ -23,6 +23,4 @@ func (c *Config) Read() {
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&c)
 	if err != nil {  log.Fatal(err) }
-
-	fmt.Printf("asd %s\n", c.Server)
 }

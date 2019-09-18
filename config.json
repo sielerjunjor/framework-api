@@ -1,5 +1,5 @@
 {
 "Server":"mongodb://localhost:27017",
 "Database":"frameworks",
-  "Collection": "frameworks"
+"Collection": "frameworks"
 }

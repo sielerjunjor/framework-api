@@ -2,15 +2,12 @@ package dao
 
 import (
 	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/sielerjunjor/framework-api/models"
 	"go.mongodb.org/mongo-driver/bson"
-	"log"
-	"time"
-
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 )
 
 type FrameworksDAO struct {
@@ -27,12 +24,18 @@ const (
 
 // Establish a connection to database
 func (m *FrameworksDAO) Connect() {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(m.Server))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(m.Server))
 	if err != nil {
-		log.Print("first")
 		log.Fatal(err)
 	}
+
+	err = client.Ping(context.TODO(), nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Print("Connected to MongoDB!")
 
 	collection = client.Database(m.Database).Collection(m.Collection)
 }
@@ -69,20 +72,10 @@ func (m *FrameworksDAO) Delete(id string)  (bool, error) {
 
 // Update an existing framework
 func (m *FrameworksDAO) Update(id string, framework models.Framework) (error) {
-	fmt.Print(id)
-
 	oid, _ := primitive.ObjectIDFromHex(id)
 	framework.ID = &oid
-	fmt.Print(framework)
 
-	filter := bson.M{"_id": oid}
-	fmt.Println("filter: %d\n", filter)
-	update := bson.M{"$set": &framework}
-
-	res := collection.FindOneAndUpdate(nil, filter, update)
-
-
-
+	res := collection.FindOneAndUpdate(nil, bson.M{"_id": oid}, bson.M{"$set": &framework})
 	return res.Err()
 	//return err
 }
