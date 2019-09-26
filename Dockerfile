@@ -19,14 +19,17 @@ CMD ["framework-api"]
 #WORKDIR /go/src/github.com/sielerjunjor/framework-api
 #RUN go get github.com/gorilla/mux go.mongodb.org/mongo-driver ; exit 0
 #COPY . .
-#RUN go build -o /go/src/github.com/sielerjunjor/framework-api
+#RUN go install
+#RUN go build -o /go/bin/hello
 
 
 ##########
 # Step2  #
 ##########
-#FROM scratch
+#FROM scratch AS Production
 #EXPOSE 3000
-#COPY --from=builder /go/src/github.com/sielerjunjor/framework-api /go/src/github.com/sielerjunjor/framework-api
-# Run the Frameworks binary.
-#ENTRYPOINT ["/go/src/github.com/sielerjunjor/framework-api"]
+# Copy our static executable.
+#COPY --from=builder /go/bin/hello /go/bin/hello
+
+# Run the hello binary.
+#CMD ["./go/bin/hello"]
