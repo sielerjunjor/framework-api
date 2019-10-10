@@ -1,15 +1,18 @@
 ######################
 #       Working      #
 ######################
-FROM golang:alpine
+FROM scratch
 EXPOSE 3000
-RUN apk update && apk add --no-cache git
+#RUN apk update && apk add --no-cache git
 
-WORKDIR /go/src/github.com/sielerjunjor/framework-api
-RUN go get github.com/gorilla/mux go.mongodb.org/mongo-driver ; exit 0
-COPY . .
-RUN go install
-CMD ["framework-api"]
+#WORKDIR /go/src/github.com/sielerjunjor/framework-api
+WORKDIR /usr/bin
+COPY config.json config.json
+COPY app app
+#RUN go get github.com/gorilla/mux go.mongodb.org/mongo-driver ; exit 0
+#COPY . .
+#RUN go install
+CMD ["app"]
 # docker run --rm --net="host" --name golangba golangba
 
 ##########

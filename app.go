@@ -5,6 +5,7 @@ import (
 	_ "encoding/json"
 	"github.com/sielerjunjor/framework-api/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 
 	//	"google.golang.org/appengine"
 
@@ -105,7 +106,7 @@ func init() {
 }
 
 func main() {
-
+	t := time.Now()
 	log.Println("Starting Rest Endpoint")
 	log.Println("Endpoint at localhost:3000/frameworks")
 
@@ -115,6 +116,9 @@ func main() {
 	r.HandleFunc("/frameworks", CreateFrameworkEndPoint).Methods("POST")
 	r.HandleFunc("/frameworks/{id}", UpdateFrameworkEndPoint).Methods("PUT")
 	r.HandleFunc("/frameworks/{id}", DeleteFrameworkEndPoint).Methods("DELETE")
+
+	log.Println("Starting Time", time.Now().Sub(t))
+
 
 	if err := http.ListenAndServe(":3000", r); err != nil {
 		log.Fatal(err)
