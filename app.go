@@ -19,7 +19,7 @@ import (
 
 var config = Config{}
 var dao = FrameworksDAO{}
-
+var startTime = time.Now()
 
 //GET list of Frameworks
 func AllFrameworksEndpoint(w http.ResponseWriter, r *http.Request){
@@ -97,6 +97,7 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 
 // Parse the configuration file 'config.toml', and establish a connection to DB
 func init() {
+	//startTime = time.Now()
 	config.Read()
 
 	dao.Server = config.Server
@@ -106,7 +107,7 @@ func init() {
 }
 
 func main() {
-	t := time.Now()
+
 	log.Println("Starting Rest Endpoint")
 	log.Println("Endpoint at localhost:3000/frameworks")
 
@@ -117,7 +118,7 @@ func main() {
 	r.HandleFunc("/frameworks/{id}", UpdateFrameworkEndPoint).Methods("PUT")
 	r.HandleFunc("/frameworks/{id}", DeleteFrameworkEndPoint).Methods("DELETE")
 
-	log.Println("Starting Time", time.Now().Sub(t))
+	log.Println("Starting Time", time.Now().Sub(startTime))
 
 
 	if err := http.ListenAndServe(":3000", r); err != nil {
